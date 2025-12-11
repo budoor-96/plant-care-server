@@ -172,6 +172,16 @@ app.get("/plants/:userId", async (req, res) => {
   }
 });
 
+//  New route to get all plants
+app.get("/getPlants", async (req, res) => {
+  try {
+    const plants = await PlantModel.find();
+    res.json({ plants });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Update Plant
 app.put("/plants/:id", upload.single("image"), async (req, res) => {
   try {
@@ -234,3 +244,4 @@ app.post("/login", async (req, res) => {
 
 const PORT = process.env.PORT || 7500;
 app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
+
