@@ -14,9 +14,9 @@ dotenv.config();
 const app = express()
 ;
 app.use(cors(
-// {
-//     origin: "https://plant-care-reminder-1.onrender.com", 
-//   }
+{
+    origin: "https://plant-care-reminder-1.onrender.com", 
+  }
 ));
 
 
@@ -244,4 +244,5 @@ app.post("/login", async (req, res) => {
 
 const PORT = process.env.PORT || 7500;
 app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
+
 
