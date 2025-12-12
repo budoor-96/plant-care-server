@@ -139,14 +139,25 @@ app.post("/plants", upload.single("image"), async (req, res) => {
     if (!userId || !plantName || !species || !wateringFrequency || !lastWateredDate) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+      const last = new Date(lastWateredDate);
+const freq = Number(wateringFrequency);
+
+if (isNaN(last) || !Number.isFinite(freq)) {
+  return res.status(400).json({ message: "Invalid lastWateredDate or wateringFrequency" });
+}
+
+const next = new Date(last);
+next.setDate(next.getDate() + freq);
+
 
     const newPlant = new PlantModel({
       userId,
       plantName,
       species,
-      wateringFrequency: Number(wateringFrequency),
-      lastWateredDate,
-      imageUrl: req.file ? `/uploads/${req.file.filename}` : null
+      wateringFrequency:freq,
+      lastWateredDate:last,
+     nextWateringDate: next,
+    imageUrl: req.file ? `/uploads/${req.file.filename}` : null
     });
 
     const savedPlant = await newPlant.save();
@@ -185,16 +196,34 @@ app.get("/getPlants", async (req, res) => {
 // Update Plant
 app.put("/plants/:id", upload.single("image"), async (req, res) => {
   try {
+    const freq = Number(req.body.wateringFrequency);
+    const last = req.body.lastWateredDate ? new Date(req.body.lastWateredDate) : null;
+
     const updateData = {
       plantName: req.body.plantName,
       species: req.body.species,
-      wateringFrequency: Number(req.body.wateringFrequency),
-      lastWateredDate: req.body.lastWateredDate,
-    };
+      ...(Number.isFinite(freq) ? { wateringFrequency: freq } : {}),
+      ...(last ? { lastWateredDate: last } : {}),
+};
+
 
     if (req.file) {
       updateData.imageUrl = `/uploads/${req.file.filename}`;
     }
+      if (Number.isFinite(freq) || last) {
+  const existing = await PlantModel.findById(req.params.id);
+  if (!existing) return res.status(404).json({ message: "Plant not found" });
+
+  const baseLast = last ?? existing.lastWateredDate;
+  const baseFreq = Number.isFinite(freq) ? freq : existing.wateringFrequency;
+
+  if (baseLast && Number.isFinite(baseFreq)) {
+    const next = new Date(baseLast);
+    next.setDate(next.getDate() + baseFreq);
+    updateData.nextWateringDate = next;
+  }
+}
+
 
     const updatedPlant = await PlantModel.findByIdAndUpdate(
       req.params.id,
@@ -244,6 +273,7 @@ app.post("/login", async (req, res) => {
 
 const PORT = process.env.PORT || 7500;
 app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
+
 
 
 
