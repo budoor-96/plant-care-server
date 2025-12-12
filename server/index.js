@@ -149,7 +149,7 @@ if (isNaN(last.getTime()) || !Number.isFinite(freq)) {
 const next = new Date(last);
 next.setDate(next.getDate() + freq);
 
-
+    const serverBaseUrl = req.protocol + "://" + req.get("host");
     const newPlant = new PlantModel({
       userId,
       plantName,
@@ -157,7 +157,6 @@ next.setDate(next.getDate() + freq);
       wateringFrequency:freq,
       lastWateredDate:last,
      nextWateringDate: next,
-    const serverBaseUrl = req.protocol + "://" + req.get("host");
     imageUrl: req.file ? `/uploads/${req.file.filename}` : null
     });
 
@@ -274,6 +273,7 @@ app.post("/login", async (req, res) => {
 
 const PORT = process.env.PORT || 7500;
 app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
+
 
 
 
