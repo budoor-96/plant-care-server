@@ -142,7 +142,7 @@ app.post("/plants", upload.single("image"), async (req, res) => {
       const last = new Date(lastWateredDate);
 const freq = Number(wateringFrequency);
 
-if (isNaN(last) || !Number.isFinite(freq)) {
+if (isNaN(last.getTime()) || !Number.isFinite(freq)) {
   return res.status(400).json({ message: "Invalid lastWateredDate or wateringFrequency" });
 }
 
@@ -273,6 +273,7 @@ app.post("/login", async (req, res) => {
 
 const PORT = process.env.PORT || 7500;
 app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
+
 
 
 
