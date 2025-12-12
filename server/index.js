@@ -157,6 +157,7 @@ next.setDate(next.getDate() + freq);
       wateringFrequency:freq,
       lastWateredDate:last,
      nextWateringDate: next,
+    const serverBaseUrl = req.protocol + "://" + req.get("host");
     imageUrl: req.file ? `/uploads/${req.file.filename}` : null
     });
 
@@ -206,8 +207,8 @@ app.put("/plants/:id", upload.single("image"), async (req, res) => {
       ...(last ? { lastWateredDate: last } : {}),
 };
 
-
     if (req.file) {
+     const serverBaseUrl = req.protocol + "://" + req.get("host");
       updateData.imageUrl = `/uploads/${req.file.filename}`;
     }
       if (Number.isFinite(freq) || last) {
@@ -273,6 +274,7 @@ app.post("/login", async (req, res) => {
 
 const PORT = process.env.PORT || 7500;
 app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
+
 
 
 
