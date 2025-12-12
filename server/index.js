@@ -157,7 +157,7 @@ next.setDate(next.getDate() + freq);
       wateringFrequency:freq,
       lastWateredDate:last,
      nextWateringDate: next,
-    imageUrl: req.file ? `/uploads/${req.file.filename}` : null
+    imageUrl: req.file ? `${serverBaseUrl}/uploads/${req.file.filename}` : null
     });
 
     const savedPlant = await newPlant.save();
@@ -208,7 +208,7 @@ app.put("/plants/:id", upload.single("image"), async (req, res) => {
 
     if (req.file) {
      const serverBaseUrl = req.protocol + "://" + req.get("host");
-      updateData.imageUrl = `/uploads/${req.file.filename}`;
+      updateData.imageUrl = `${serverBaseUrl}/uploads/${req.file.filename}`;
     }
       if (Number.isFinite(freq) || last) {
   const existing = await PlantModel.findById(req.params.id);
@@ -273,6 +273,7 @@ app.post("/login", async (req, res) => {
 
 const PORT = process.env.PORT || 7500;
 app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
+
 
 
 
