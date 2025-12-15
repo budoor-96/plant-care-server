@@ -42,7 +42,7 @@ out;
     const response = await axios.get(overpassUrl);
     const elements = response.data.elements;
 
-    // Map nurseries from Overpass
+    // Map nurseries
    let nurseries = elements.map(el => ({
   name: el.tags?.name || "Unnamed Nursery",
   latitude: Number(el.lat),
@@ -67,9 +67,9 @@ nurseries = [
 ];
 
 
-    // If Overpass returns nothing, provide dynamic nearby points as fallback
+    
     if (nurseries.length === 0) {
-      const fallbackDistance = 0.001; // ~100m offset
+      const fallbackDistance = 0.001; 
       nurseries = [
         { name: "Nursery Near You 1", latitude: parseFloat(lat) + fallbackDistance, longitude: parseFloat(lon) + fallbackDistance, address: "Nearby street" },
         { name: "Nursery Near You 2", latitude: parseFloat(lat) - fallbackDistance, longitude: parseFloat(lon) - fallbackDistance, address: "Nearby street" },
@@ -79,8 +79,7 @@ nurseries = [
     res.json(nurseries);
   } catch (err) {
     console.error("Overpass API error:", err.message);
-    // Fallback dynamic nurseries if Overpass fails
-    const fallbackDistance = 0.001; // ~100m offset
+    const fallbackDistance = 0.001; 
     const fallbackNurseries = [
       { name: "Nursery Near You 1", latitude: parseFloat(lat) + fallbackDistance, longitude: parseFloat(lon) + fallbackDistance, address: "Nearby street" },
       { name: "Nursery Near You 2", latitude: parseFloat(lat) - fallbackDistance, longitude: parseFloat(lon) - fallbackDistance, address: "Nearby street" },
@@ -89,13 +88,12 @@ nurseries = [
   }
 });
 
-// Middleware
 app.use(express.json());
 
-// Serve uploaded images
+//uploaded images
 app.use("/uploads", express.static("uploads"));
 
-// Multer config
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
@@ -172,7 +170,7 @@ next.setDate(next.getDate() + freq);
   }
 });
 
-// Get all plants for a user
+//all plants for a user
 app.get("/plants/:userId", async (req, res) => {
   try {
     const plants = await PlantModel.find({ userId: req.params.userId });
@@ -183,7 +181,7 @@ app.get("/plants/:userId", async (req, res) => {
   }
 });
 
-//  New route to get all plants
+//to get all plants
 app.get("/getPlants", async (req, res) => {
   try {
     const plants = await PlantModel.find();
@@ -273,6 +271,7 @@ app.post("/login", async (req, res) => {
 
 const PORT = process.env.PORT || 7500;
 app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
+
 
 
 
