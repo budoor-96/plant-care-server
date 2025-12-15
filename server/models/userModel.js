@@ -9,10 +9,10 @@ const userSchema = new mongoose.Schema(
     profilePic: {
       type: String,
       default: "https://www.nicepng.com/png/detail/933-9332131_profile-picture-default-png.png"
-    } // نغير الصوره
+    } 
   },
   {
-    timestamps: true, // adds createdAt and updatedAt
+    timestamps: true, 
     versionKey: false
   }
 );
@@ -20,3 +20,4 @@ const userSchema = new mongoose.Schema(
 const UserModel = mongoose.model("users", userSchema);
 
 export default UserModel;
+
